@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ScheduleBTEC.DTO.AttendanceDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<form method="post" asp-action="Update">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Users)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Schedule)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Attendance)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Users.Fullname)
+                        <input type="hidden" asp-for="@item.Users.UserId" name="attendanceList[@item.Users.UserId].UserId" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Schedule.timelearn)
+                        <input type="hidden" asp-for="@item.Schedule.ScheduleId" name="attendanceList[@item.Users.UserId].ScheduleId" />
+                    </td>
+                    <td>
+                        @if (item.Attendance != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Attendance.status)
+                            <input type="hidden" asp-for="@item.Attendance.AttendanceId" name="attendanceList[@item.Users.UserId].Attendance.AttendanceId" />
+                        }
+                        else
+                        {
+                            <select asp-for="@item.Attendance.status" name="attendanceList[@item.Users.UserId].Attendance.status">
+                                <option value="0">Absent</option>
+                                <option value="1">Attend</option>
+                            </select>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="submit" value="Save" class="btn btn-primary" />
+</form>
+
+

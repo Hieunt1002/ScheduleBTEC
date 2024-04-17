@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ScheduleBTEC.DTO.AttendanceDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<form asp-action="Edit" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Users)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Schedule)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Attendance)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Users.Fullname)
+                        <input type="hidden" name="userid" value="@item.Users.UserId" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Schedule.timelearn)
+                    </td>
+                    <td>
+                        @if (item.Attendance != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Attendance.status)
+                            <input type="hidden" asp-for="@item.Attendance.AttendanceId" name="attendanceList[@item.Users.UserId].Attendance.AttendanceId" />
+                        }
+                        else
+                        {
+                            <select name="status">
+                                <option value="false">Absent</option>
+                                <option value="true">Attend</option>
+                            </select>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="submit" value="Save" class="btn btn-primary" />
+</form>
+
+
