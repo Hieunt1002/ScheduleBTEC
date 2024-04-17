@@ -45,10 +45,10 @@
         @for (int i = 1; i <= 4; i++)
         {
             <tr>
-                <td>Tiết @i</td>
+                <td style="height : 100px">Tiết @i</td>
                 @for (int j = 1; j <= 7; j++)
                 {
-                    <td>
+                    <td style="height : 100px">
                         @foreach (var item in Model)
                         {
                             DayOfWeek dayOfWeek = item.DateLearn.DayOfWeek;
