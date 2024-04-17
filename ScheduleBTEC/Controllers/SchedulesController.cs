@@ -231,11 +231,11 @@ namespace ScheduleBTEC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int[] userid, bool[] status, int[] attend)
+        public async Task<IActionResult> Edit(int[] id, int[] userid, bool[] status, int[] attend)
         {
             try
             {
-                var check = _context.Attendances.SingleOrDefault(c => c.ScheduleId == id);
+                var check = _context.Attendances.FirstOrDefault(c => c.ScheduleId == id[0]);
                 if (check == null)
                 {
                     for (int i = 0; i < userid.Length; i++)
@@ -243,25 +243,25 @@ namespace ScheduleBTEC.Controllers
                         var att = new Attendance
                         {
                             UserId = userid[i],
-                            ScheduleId = id,
+                            ScheduleId = id[i],
                             status = status[i]
                         };
                         _context.Add(att);
                         await _context.SaveChangesAsync();
                     }
+
+                }else
+                {
                     for (int i = 0; i < userid.Length; i++)
                     {
-                        var att = new Attendance
+                        var a = _context.Attendances.FirstOrDefault(n => n.AttendanceId == attend[i]);
+                        if(a != null)
                         {
-                            AttendanceId= attend[i],
-                            UserId = userid[i],
-                            ScheduleId = id,
-                            status = status[i]
-                        };
-                        _context.Entry(att).State = EntityState.Modified;
-                        await _context.SaveChangesAsync();
+                            a.status = status[i];
+                            _context.Entry(a).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
                     }
-
                 }
 
             }
