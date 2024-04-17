@@ -1,10 +1,7 @@
-﻿@model IEnumerable<ScheduleBTEC.Models.Schedule>
+﻿@model IEnumerable<ScheduleBTEC.DTO.ViewScheduleDTO>
 
 @{
-    // Biến để lưu trữ thông tin về tuần đã chọn
     DateTime selectedWeek;
-
-    // Kiểm tra nếu đã chọn tuần, nếu không thì sử dụng tuần hiện tại
     if (ViewBag.SelectedWeek != null && ViewBag.SelectedWeek is DateTime)
     {
         selectedWeek = (DateTime)ViewBag.SelectedWeek;
@@ -13,44 +10,43 @@
     {
         selectedWeek = DateTime.Today;
     }
-
-    // Xác định ngày bắt đầu và kết thúc của tuần đã chọn
-    DateTime startOfWeek = selectedWeek.AddDays(-(int)selectedWeek.DayOfWeek);
-    DateTime endOfWeek = startOfWeek.AddDays(6);
-
-    // Chuỗi để lưu trữ giá trị tuần trong định dạng "yyyy-Www"
-    string weekValue = $"{selectedWeek:yyyy}-W{selectedWeek:ww}";
+    // Calculate the overall start and end dates
+    DateTime overallStartDate = Model.Any() ? Model.Min(item => item.startdate) : selectedWeek.AddDays(5);
+    DateTime overallEndDate = Model.Any() ? Model.Max(item => item.enddate) : overallStartDate.AddDays(6);
 }
 
 
-<h1>Lịch học</h1>
+<h1>Calender</h1>
 
 <p>
     <a asp-action="Create">Tạo mới</a>
 </p>
 
 <form asp-action="Index" method="get">
-    <label for="week">Chọn một tuần:</label>
-    <input type="week" name="week" id="week" value="@selectedWeek.ToString("yyyy-MM-dd")">
-    <button type="submit">Tìm kiếm</button>
+    <label for="week">Choice Week:</label>
+    <input type="week" name="week" id="week">
+    <button type="submit">Search</button>
 </form>
 
 <table class="table">
     <thead style="background-color: blue;color:white;">
         <tr>
             <th>Slot</th>
-            @for (DateTime date = startOfWeek; date <= endOfWeek; date = date.AddDays(1))
+            @for (DateTime date = overallStartDate; date <= overallEndDate; date = date.AddDays(1))
             {
                 <th>@date.ToString("ddd")<br />@date.ToString("MM/dd")</th>
             }
         </tr>
+
+
     </thead>
+
     <tbody>
         @for (int i = 1; i <= 4; i++)
         {
             <tr>
                 <td>Tiết @i</td>
-                @for (int j = 0; j <= 6; j++)
+                @for (int j = 1; j <= 7; j++)
                 {
                     <td>
                         @foreach (var item in Model)
@@ -59,8 +55,17 @@
                             int dayOfWeekNumber = (int)dayOfWeek;
                             if (dayOfWeekNumber == j && item.timelearn == i.ToString())
                             {
-                                <h2>@item.Learn.ClassEntity.className</h2>
-                                <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                <h2>@item.classname</h2>
+                                if (item.role == "1" && item.DateLearn.Date == DateTime.Now.Date)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                }
+                                else if (item.role == "1" && item.DateLearn.Date < DateTime.Now.Date)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                    <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
+                                }
+
                             }
                         }
                     </td>
