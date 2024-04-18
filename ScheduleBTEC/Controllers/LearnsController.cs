@@ -23,7 +23,7 @@ namespace ScheduleBTEC.Controllers
         public async Task<IActionResult> Index()
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || (roleIdString != "4" && roleIdString != "3"))
             {
                 return Redirect("/Home/Login");
             }
@@ -55,7 +55,7 @@ namespace ScheduleBTEC.Controllers
         public IActionResult Create()
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || (roleIdString != "4" && roleIdString != "3"))
             {
                 return Redirect("/Home/Login");
             }
@@ -81,19 +81,15 @@ namespace ScheduleBTEC.Controllers
         }
 
         // GET: Learns/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public  IActionResult Edit(int? id)
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || (roleIdString != "4" && roleIdString != "3"))
             {
                 return Redirect("/Home/Login");
             }
-            if (id == null || _context.Learns == null)
-            {
-                return NotFound();
-            }
-
-            var learn = await _context.Learns.FindAsync(id);
+            
+            var learn =  _context.Learns.Find(id);
             if (learn == null)
             {
                 return NotFound();
@@ -107,31 +103,19 @@ namespace ScheduleBTEC.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LearnId,LearnName,TeachId,ClassId")] Learn learn)
+        
+        public IActionResult Edit( Learn learn)
         {
-            if (id != learn.LearnId)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(learn);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                   
-                    
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClassId"] = new SelectList(_context.ClassEntities, "ClassId", "className", learn.ClassId);
-            ViewData["TeachId"] = new SelectList(_context.Teaches, "TeachId", "TeachName", learn.TeachId);
-            return View(learn);
+
+            _context.Learns.Attach(learn);
+            _context.Update(learn);
+                     _context.SaveChanges();
+                
+               
+                return RedirectToAction("Index");
+            
+          
         }
 
         // GET: Learns/Delete/5

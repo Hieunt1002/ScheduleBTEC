@@ -12,7 +12,7 @@ namespace ScheduleBTEC.Controllers
         public IActionResult Index()
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || (roleIdString != "4" && roleIdString != "3"))
             {
                 return Redirect("/Home/Login");
             }
@@ -22,7 +22,7 @@ namespace ScheduleBTEC.Controllers
         public ActionResult AddClass()
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || (roleIdString != "4" && roleIdString != "3"))
             {
                 return Redirect("/Home/Login");
             }
@@ -47,7 +47,7 @@ namespace ScheduleBTEC.Controllers
         public ActionResult EditClass(int id)
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || (roleIdString != "4" && roleIdString != "3"))
             {
                 return Redirect("/Home/Login");
             }

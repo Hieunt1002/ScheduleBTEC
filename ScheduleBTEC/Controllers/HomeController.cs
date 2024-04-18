@@ -52,7 +52,7 @@ namespace ScheduleBTEC.Controllers
             }
             else if (user.Role == "3")
             {
-                return RedirectToAction("TeacherIndex", "StaffTrain");
+                return RedirectToAction("IndexAccount", "Admin");
             }
             else if (user.Role == "1")
             {

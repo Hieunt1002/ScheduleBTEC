@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Lear Manager</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -37,9 +37,9 @@
                 @Html.DisplayFor(modelItem => item.ClassEntity.className)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.LearnId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.LearnId">Delete</a>
-            </td>
+                    <a asp-action="Edit" asp-route-id="@item.LearnId" class="btn btn-sm btn-warning ">Edit</a> |
+                    <a href="#" data-id="@item.LearnId" class="btn btn-sm btn-danger btnDelete"> Delete</a>
+                </td>
         </tr>
 }
     </tbody>
