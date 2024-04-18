@@ -43,21 +43,21 @@ namespace ScheduleBTEC.Controllers
             }
             HttpContext.Session.SetInt32("ID", user.UserId);
             HttpContext.Session.SetString("Fullname", user.Fullname);
-            if (user.Role == "admin")
+            if (user.Role == "4")
             {
                 return RedirectToAction("Index", "Admin");
             }
-            else if (user.Role == "stafftrain")
+            else if (user.Role == "3")
             {
                 return RedirectToAction("TeacherIndex", "StaffTrain");
             }
-            else if (user.Role == "teacher")
+            else if (user.Role == "1")
             {
-                return RedirectToAction("index", "Teacher");
+                return RedirectToAction("Index", "Schedules");
             }
-            else if (user.Role == "student")
+            else if (user.Role == "2")
             {
-                return RedirectToAction("index", "Student");
+                return RedirectToAction("Index", "Schedules");
             }
 
             return RedirectToAction("Login");

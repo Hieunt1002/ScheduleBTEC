@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,9 +25,14 @@ namespace ScheduleBTEC.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index(string week)
         {
+            var user = _context.Users.FirstOrDefault(u => u.UserId == 1);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
             DateTime startOfWeek;
             DateTime endOfWeek;
-
             if (!string.IsNullOrEmpty(week))
             {
                 string[] parts = week.Split("-W");
@@ -45,18 +51,68 @@ namespace ScheduleBTEC.Controllers
             else
             {
                 DateTime today = DateTime.Today;
-                int daysUntilMonday = ((int)DayOfWeek.Monday - (int)today.DayOfWeek + 7) % 7;
+                int daysUntilMonday = ((int)DayOfWeek.Monday - (int)today.DayOfWeek) % 7;
                 startOfWeek = today.AddDays(daysUntilMonday);
                 endOfWeek = startOfWeek.AddDays(6);
             }
 
-            var connectDB = _context.Schedules
-                .Include(s => s.Learn)
-                    .ThenInclude(l => l.ClassEntity)
-                .Where(s => s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek && s.Learn.Teach.TeachId == 1);
+            if (user.Role == null)
+            {
+                // Handle the case where user role is null
+                return BadRequest("User role is not defined.");
+            }
 
-            return View(await connectDB.ToListAsync());
+            if (user.Role == "1")
+            {
+                var connectDB = (from s in _context.Schedules
+                                 join l in _context.Learns on s.LearnId equals l.LearnId
+                                 join cl in _context.ClassEntities on l.ClassId equals cl.ClassId
+                                 join t in _context.Teaches on l.TeachId equals t.TeachId
+                                 join c in _context.Courses on t.CourseId equals c.CourseId
+                                 where t.UserId == 1 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
+                                 select new ViewScheduleDTO
+                                 {
+                                     ScheduleId = s.ScheduleId,
+                                     coursename = c.CourseName,
+                                     DateLearn = s.DateLearn,
+                                     timelearn = s.timelearn,
+                                     classname = cl.className,
+                                     startdate = startOfWeek,
+                                     enddate = endOfWeek,
+                                     status = !_context.Attendances.Any(a => a.ScheduleId == s.ScheduleId),
+                                     role = user.Role
+                                 }).ToList();
+
+
+                return View(connectDB);
+            }
+            else
+            {
+                var connectDB = (from s in _context.Schedules
+                                 join l in _context.Learns on s.LearnId equals l.LearnId
+                                 join cl in _context.ClassEntities on l.ClassId equals cl.ClassId
+                                 join st in _context.Studys on l.LearnId equals st.LearnId
+                                 join t in _context.Teaches on l.TeachId equals t.TeachId
+                                 join c in _context.Courses on t.CourseId equals c.CourseId
+                                 where st.UserId == 1 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
+                                 select new ViewScheduleDTO
+                                 {
+                                     ScheduleId = s.ScheduleId,
+                                     coursename = c.CourseName,
+                                     DateLearn = s.DateLearn,
+                                     timelearn = s.timelearn,
+                                     classname = cl.className,
+                                     startdate = startOfWeek,
+                                     enddate = endOfWeek,
+                                     status = (from a in _context.Attendances
+                                               where a.ScheduleId == s.ScheduleId && a.UserId == 1
+                                               select a.status).FirstOrDefault(),
+                                     role = user.Role
+                                 }).ToList();
+                return View(connectDB);
+            }
         }
+
 
 
 
@@ -159,7 +215,7 @@ namespace ScheduleBTEC.Controllers
                                 Users = u,
                                 ClassEntity = c,
                                 Attendance = a
-                            }).ToList(); // Chuyển kết quả thành List
+                            }).ToList();
 
             if (!schedule.Any())
             {
@@ -175,20 +231,37 @@ namespace ScheduleBTEC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int[] userid, bool[] status)
+        public async Task<IActionResult> Edit(int[] id, int[] userid, bool[] status, int[] attend)
         {
             try
             {
-                for (int i = 0; i < userid.Length; i++)
+                var check = _context.Attendances.FirstOrDefault(c => c.ScheduleId == id[0]);
+                if (check == null)
                 {
-                    var att = new Attendance
+                    for (int i = 0; i < userid.Length; i++)
                     {
-                        UserId = userid[i],
-                        ScheduleId = id,
-                        status = status[i]
-                    };
-                    _context.Add(att);
-                    await _context.SaveChangesAsync();
+                        var att = new Attendance
+                        {
+                            UserId = userid[i],
+                            ScheduleId = id[i],
+                            status = status[i]
+                        };
+                        _context.Add(att);
+                        await _context.SaveChangesAsync();
+                    }
+
+                }else
+                {
+                    for (int i = 0; i < userid.Length; i++)
+                    {
+                        var a = _context.Attendances.FirstOrDefault(n => n.AttendanceId == attend[i]);
+                        if(a != null)
+                        {
+                            a.status = status[i];
+                            _context.Entry(a).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
                 }
 
             }

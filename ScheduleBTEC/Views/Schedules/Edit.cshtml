@@ -28,6 +28,8 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Users.Fullname)
                         <input type="hidden" name="userid" value="@item.Users.UserId" />
+                        <input type="hidden" name="id" asp-for="@item.Schedule.ScheduleId" />
+
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Schedule.timelearn)
@@ -36,7 +38,11 @@
                         @if (item.Attendance != null)
                         {
                             @Html.DisplayFor(modelItem => item.Attendance.status)
-                            <input type="hidden" asp-for="@item.Attendance.AttendanceId" name="attendanceList[@item.Users.UserId].Attendance.AttendanceId" />
+                            <input type="hidden" asp-for="@item.Attendance.AttendanceId" name="attend" />
+                            <select name="status">
+                                <option value="false">Absent</option>
+                                <option value="true">Attend</option>
+                            </select>
                         }
                         else
                         {
