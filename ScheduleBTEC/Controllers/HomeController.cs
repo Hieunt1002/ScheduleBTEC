@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using ScheduleBTEC.Context;
 using ScheduleBTEC.DTO;
 using ScheduleBTEC.Models;
@@ -43,9 +44,11 @@ namespace ScheduleBTEC.Controllers
             }
             HttpContext.Session.SetInt32("ID", user.UserId);
             HttpContext.Session.SetString("Fullname", user.Fullname);
+            HttpContext.Session.SetString("Role", user.Role);
+
             if (user.Role == "4")
             {
-                return RedirectToAction("Index", "Admin");
+                return RedirectToAction("IndexAccount", "Admin");
             }
             else if (user.Role == "3")
             {
@@ -72,6 +75,12 @@ namespace ScheduleBTEC.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public IActionResult DangXuat()
+        {
+            HttpContext.SignOutAsync();
+            HttpContext.Session.Clear();
+            return Redirect("/");
         }
     }
 }

@@ -1,24 +1,25 @@
-﻿@model IEnumerable<ScheduleBTEC.Models.ClassEntity>
+﻿@model IEnumerable<ScheduleBTEC.Models.Learn>
 
 @{
     ViewData["Title"] = "Index";
 }
-@{
-    var role = Context.Session.GetString("Role");
-}
-<h1>Class Manager</h1>
+
+<h1>Index</h1>
 
 <p>
-    @if (role =="4")
-    {
-        <a asp-action="AddClass">Create Class</a>
-    }
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.className)
+                @Html.DisplayNameFor(model => model.LearnName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teach)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassEntity)
             </th>
             <th></th>
         </tr>
@@ -27,16 +28,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.className)
+                @Html.DisplayFor(modelItem => item.LearnName)
             </td>
             <td>
-                    @if (role == "4")
-                    {
-                        <a asp-action="EditClass" class="btn btn-sm btn-warning" asp-route-id="@item.ClassId">Edit</a>
-                        <a href="#" data-id="@item.ClassId" class="btn btn-sm btn-danger btnDelete"> Delete</a>
-
-                    }
-                   
+                @Html.DisplayFor(modelItem => item.Teach.TeachName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClassEntity.className)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LearnId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.LearnId">Delete</a>
             </td>
         </tr>
 }
@@ -50,11 +52,11 @@
         $(document).ready(function () {
             $('body').on('click', '.btnDelete', function () {
                 var id = $(this).data("id");
-                var conf = confirm('You Delete Class ?');
+                var conf = confirm('You Delete Account ?');
 
                 if (conf === true) {
                     $.ajax({
-                        url: '/class/DeleteAcc',
+                        url: '/Learns/DeleteCourse',
                         type: 'POST',
                         data: { id: id },
                         success: function (rs) {

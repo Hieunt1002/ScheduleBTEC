@@ -158,6 +158,11 @@ namespace ScheduleBTEC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("startDate,endDate,session,timelearn,LearnId")] ScheduleDTO schedule)
         {
+            string roleIdString = HttpContext.Session.GetString("Role");
+            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            {
+                return Redirect("/Home/Login");
+            }
             if (ModelState.IsValid)
             {
                 for (DateTime date = schedule.startDate; date <= schedule.endDate; date = date.AddDays(1))
@@ -197,6 +202,11 @@ namespace ScheduleBTEC.Controllers
         // GET: Schedules/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            string roleIdString = HttpContext.Session.GetString("Role");
+            if (roleIdString == null || roleIdString != "1" )
+            {
+                return Redirect("/Home/Login");
+            }
             if (id == null || _context.Schedules == null)
             {
                 return NotFound();

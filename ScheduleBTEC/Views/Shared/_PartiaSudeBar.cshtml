@@ -1,4 +1,9 @@
-﻿<!-- Sidebar -->
+﻿@{
+    var fullname = Context.Session.GetString("Fullname");
+
+    var role = Context.Session.GetString("Role");
+}
+<!-- Sidebar -->
 <div class="sidebar">
     <!-- Sidebar user (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -6,8 +11,13 @@
             <img src="~/Content/clients/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-            <a href="#" class="d-block">Nhan</a>
+            <a href="#" class="d-block">@fullname</a>
         </div>
+        <div class="btn btn-danger">
+            <a asp-controller="Home" asp-action="DangXuat" >Logout</a>
+        </div>
+             
+           
     </div>
 
     <!-- SidebarSearch Form -->
@@ -30,13 +40,18 @@
             <!-- Add icons to the links using the .nav-icon class
     with font-awesome or any other icon font library -->
             <li class="nav-item">
-                <a href="/Admin/IndexAccount" class="nav-link">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                        Accopunt Manager 
-                        @*  <i class="right fas fa-angle-left"></i>*@
-                    </p>
-                </a>@*
+                @if (role == "4" || role == "3")
+                {
+                    <a href="/Admin/IndexAccount" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Accopunt Manager
+                            @*  <i class="right fas fa-angle-left"></i>*@
+                        </p>
+                    </a>
+
+                }
+                @*
                                 <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="~/Content/clients/index.html" class="nav-link">
@@ -58,17 +73,34 @@
                 </li>
             </ul>*@
             </li>
-            <li class="nav-item">
-                <a href="/Course/Index" class="nav-link">
-                    <i class="nav-icon fas fa-th"></i>
-                    <p>
-                        Course
-                        @*<span class="right badge badge-danger">New</span>*@
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/Class/Index" class="nav-link">
+            @if (role == "4" || role == "3")
+            {
+                <li class="nav-item">
+                    <a href="/Course/Index" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Course
+                            @*<span class="right badge badge-danger">New</span>*@
+                        </p>
+                    </a>
+                </li>
+            }
+            @if (role == "4" || role == "3")
+            {
+                <li class="nav-item">
+                    <a href="/Learns/Index" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Learns
+                            @*<span class="right badge badge-danger">New</span>*@
+                        </p>
+                    </a>
+                </li>
+            }
+                @if (role == "4" || role == "3")
+            {
+                <li class="nav-item">
+                    <a href="/Class/Index" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
                     <p>
                         Class
@@ -76,6 +108,7 @@
                     </p>
                 </a>
             </li>
+            }
             <li class="nav-item">
                 <a href="/Schedules/Index" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
@@ -85,13 +118,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="/admin" class="nav-link">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                        ClassEntities
-                    </p>
-                </a>
+            
         </ul>
     </nav>
     <!-- /.sidebar-menu -->

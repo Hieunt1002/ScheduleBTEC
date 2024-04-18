@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<ScheduleBTEC.DTO.ViewScheduleDTO>
+@{
+    var role = Context.Session.GetString("Role");
+}
 
 @{
     DateTime selectedWeek;
@@ -19,7 +22,11 @@
 <h1>Calender</h1>
 
 <p>
-    <a asp-action="Create">Create</a>
+    @if (role == "4")
+    {
+        <a asp-action="Create">Create</a>
+    }
+   
 </p>
 
 <form asp-action="Index" method="get">
@@ -58,12 +65,20 @@
                                 <h2>@item.classname</h2>
                                 if (item.role == "1" && item.DateLearn.Date == DateTime.Now.Date)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                    if(role == "1")
+                                    {
+                                       <a asp-action="Edit" asp-route-id="@item.ScheduleId">attendance</a>
+
+                                    }
                                     <h6>Today</h6>
                                 }
                                 else if (item.role == "1" && item.DateLearn.Date < DateTime.Now.Date)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                    if (role == "1")
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.ScheduleId">attendance</a>
+
+                                    }
                                     <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
                                 }
                                 else if (item.DateLearn.Date < DateTime.Now.Date || item.DateLearn.Date > DateTime.Now.Date)

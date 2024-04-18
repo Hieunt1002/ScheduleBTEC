@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ScheduleBTEC.Context;
 using ScheduleBTEC.DTO;
 using ScheduleBTEC.Models;
@@ -11,11 +12,21 @@ namespace ScheduleBTEC.Controllers
 
         public IActionResult Index()
         {
+            string roleIdString = HttpContext.Session.GetString("Role");
+            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            {
+                return Redirect("/Home/Login");
+            }
             var course = db.Courses;
             return View(course);
         }
         public ActionResult AddCourse()
         {
+            string roleIdString = HttpContext.Session.GetString("Role");
+            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            {
+                return Redirect("/Home/Login");
+            }
             return View();
         }
         [HttpPost]
@@ -40,6 +51,11 @@ namespace ScheduleBTEC.Controllers
         [HttpPost]
         public IActionResult EditCourse(Course model)
         {
+            string roleIdString = HttpContext.Session.GetString("Role");
+            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            {
+                return Redirect("/Home/Login");
+            }
             db.Courses.Attach(model);
             db.Update(model);
 
