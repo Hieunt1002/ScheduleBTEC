@@ -112,13 +112,6 @@ namespace ScheduleBTEC.Controllers
                 return View(connectDB);
             }
         }
-
-
-
-
-
-
-
         // GET: Schedules/Details/5
         public async Task<IActionResult> Details(int? id)
         {
