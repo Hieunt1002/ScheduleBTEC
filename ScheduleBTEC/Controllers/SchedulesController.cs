@@ -25,7 +25,8 @@ namespace ScheduleBTEC.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index(string week)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserId == 2 );
+            int id = (int)HttpContext.Session.GetInt32("ID");
+            var user = _context.Users.FirstOrDefault(u => u.UserId == id);
             if (user == null)
             {
                 return NotFound("User not found.");
@@ -69,7 +70,7 @@ namespace ScheduleBTEC.Controllers
                                  join cl in _context.ClassEntities on l.ClassId equals cl.ClassId
                                  join t in _context.Teaches on l.TeachId equals t.TeachId
                                  join c in _context.Courses on t.CourseId equals c.CourseId
-                                 where t.UserId == 2 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
+                                 where t.UserId == id && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
                                  select new ViewScheduleDTO
                                  {
                                      ScheduleId = s.ScheduleId,
@@ -94,7 +95,7 @@ namespace ScheduleBTEC.Controllers
                                  join st in _context.Studys on l.LearnId equals st.LearnId
                                  join t in _context.Teaches on l.TeachId equals t.TeachId
                                  join c in _context.Courses on t.CourseId equals c.CourseId
-                                 where st.UserId == 2 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
+                                 where st.UserId == id && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
                                  select new ViewScheduleDTO
                                  {
                                      ScheduleId = s.ScheduleId,
@@ -105,20 +106,13 @@ namespace ScheduleBTEC.Controllers
                                      startdate = startOfWeek,
                                      enddate = endOfWeek,
                                      status = (from a in _context.Attendances
-                                               where a.ScheduleId == s.ScheduleId && a.UserId == 2
+                                               where a.ScheduleId == s.ScheduleId && a.UserId == id
                                                select a.status).FirstOrDefault(),
                                      role = user.Role
                                  }).ToList();
                 return View(connectDB);
             }
         }
-
-
-
-
-
-
-
         // GET: Schedules/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -153,7 +147,7 @@ namespace ScheduleBTEC.Controllers
         // GET: Schedules/Create
         public IActionResult Create()
         {
-            ViewData["LearnId"] = new SelectList(_context.Learns, "LearnId", "LearnId");
+            ViewData["LearnId"] = new SelectList(_context.Learns, "LearnId", "LearnName");
             return View();
         }
 
@@ -170,19 +164,26 @@ namespace ScheduleBTEC.Controllers
                 {
                     DayOfWeek dayOfWeek = date.DayOfWeek;
                     int dayOfWeekNumber = (int)dayOfWeek;
-
-                    // Kiểm tra xem ngày trong tuần có giống với session không
-                    if (dayOfWeekNumber == schedule.session)
+                    var check = _context.Schedules.FirstOrDefault(c => c.DateLearn == date && c.timelearn == schedule.timelearn);
+                    if (check != null)
                     {
-                        var sch = new Schedule
+                        ViewData["LearnId"] = new SelectList(_context.Learns, "LearnId", "LearnId", schedule.LearnId);
+                        return View(schedule);
+                    }
+                    else
+                    {
+                        if (dayOfWeekNumber == schedule.session)
                         {
-                            DateLearn = date,
-                            timelearn = schedule.timelearn,
-                            LearnId = schedule.LearnId
-                        };
+                            var sch = new Schedule
+                            {
+                                DateLearn = date,
+                                timelearn = schedule.timelearn,
+                                LearnId = schedule.LearnId
+                            };
 
-                        _context.Add(sch);
-                        await _context.SaveChangesAsync();
+                            _context.Add(sch);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
 
