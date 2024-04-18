@@ -7,6 +7,8 @@ namespace ScheduleBTEC.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TeachId { get; set; }
+        [Required]
+        public string TeachName { get; set;}
         [ForeignKey(nameof(Users))]
         public int UserId { get; set; }
         public virtual Users Users { get; set; }

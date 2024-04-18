@@ -170,19 +170,26 @@ namespace ScheduleBTEC.Controllers
                 {
                     DayOfWeek dayOfWeek = date.DayOfWeek;
                     int dayOfWeekNumber = (int)dayOfWeek;
-
-                    // Kiểm tra xem ngày trong tuần có giống với session không
-                    if (dayOfWeekNumber == schedule.session)
+                    var check = _context.Schedules.FirstOrDefault(c => c.DateLearn == date && c.timelearn == schedule.timelearn);
+                    if (check != null)
                     {
-                        var sch = new Schedule
+                        ViewData["LearnId"] = new SelectList(_context.Learns, "LearnId", "LearnId", schedule.LearnId);
+                        return View(schedule);
+                    }
+                    else
+                    {
+                        if (dayOfWeekNumber == schedule.session)
                         {
-                            DateLearn = date,
-                            timelearn = schedule.timelearn,
-                            LearnId = schedule.LearnId
-                        };
+                            var sch = new Schedule
+                            {
+                                DateLearn = date,
+                                timelearn = schedule.timelearn,
+                                LearnId = schedule.LearnId
+                            };
 
-                        _context.Add(sch);
-                        await _context.SaveChangesAsync();
+                            _context.Add(sch);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
 
@@ -250,12 +257,13 @@ namespace ScheduleBTEC.Controllers
                         await _context.SaveChangesAsync();
                     }
 
-                }else
+                }
+                else
                 {
                     for (int i = 0; i < userid.Length; i++)
                     {
                         var a = _context.Attendances.FirstOrDefault(n => n.AttendanceId == attend[i]);
-                        if(a != null)
+                        if (a != null)
                         {
                             a.status = status[i];
                             _context.Entry(a).State = EntityState.Modified;

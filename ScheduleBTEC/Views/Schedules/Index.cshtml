@@ -64,11 +64,11 @@
                                 else if (item.role == "1" && item.DateLearn.Date < DateTime.Now.Date)
                                 {
                                     <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
-                                    <h6>@(item.status == 0 ? "Not Yes" : item.status == 2 ? "Attendance" : "Absent")</h6>
+                                    <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
                                 }
                                 else if (item.DateLearn.Date < DateTime.Now.Date || item.DateLearn.Date > DateTime.Now.Date)
                                 {
-                                    <h6>@(item.status == 0 ? "Not Yes" : item.status == 2 ? "Attendance" : "Absent")</h6>
+                                    <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
                                 }
 
                             }
