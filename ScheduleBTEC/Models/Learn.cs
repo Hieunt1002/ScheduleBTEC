@@ -7,14 +7,16 @@ namespace ScheduleBTEC.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int LearnId { get; set; }
+        [Required]
+        public string LearnName { get; set; }
         [ForeignKey(nameof(Teach))]
         public int TeachId { get; set; }
         public virtual Teach Teach { get; set; }
-        
+
         [ForeignKey(nameof(ClassEntity))]
         public int ClassId { get; set; }
         public virtual ClassEntity ClassEntity { get; set; }
-        public virtual ICollection<Schedule> Schedules { get; set; } = new List <Schedule>();
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<Study> Study { get; set; } = new List<Study>();
 
     }

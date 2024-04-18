@@ -58,12 +58,12 @@
                                 <h2>@item.classname</h2>
                                 if (item.role == "1" && item.DateLearn.Date == DateTime.Now.Date)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Attendance</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
                                     <h6>Today</h6>
                                 }
                                 else if (item.role == "1" && item.DateLearn.Date < DateTime.Now.Date)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Attendance</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
                                     <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
                                 }
                                 else if (item.DateLearn.Date < DateTime.Now.Date || item.DateLearn.Date > DateTime.Now.Date)
