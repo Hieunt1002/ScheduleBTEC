@@ -153,7 +153,7 @@ namespace ScheduleBTEC.Controllers
         // GET: Schedules/Create
         public IActionResult Create()
         {
-            ViewData["LearnId"] = new SelectList(_context.Learns, "LearnId", "LearnId");
+            ViewData["LearnId"] = new SelectList(_context.Learns, "LearnId", "LearnName");
             return View();
         }
 

@@ -24,12 +24,25 @@
             </div>
             <div class="form-group">
                 <label asp-for="session" class="control-label"></label>
-                <input asp-for="session" class="form-control" />
+                <select asp-for="session" class="form-control">
+                    <option value="1">Mon</option>
+                    <option value="2">Tues</option>
+                    <option value="3">Wednes</option>
+                    <option value="4">Thurs</option>
+                    <option value="5">Fir</option>
+                    <option value="6">Satur</option>
+                    <option value="7">Sun</option>
+                </select>
                 <span asp-validation-for="session" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="timelearn" class="control-label"></label>
-                <input asp-for="timelearn" class="form-control" />
+                <select asp-for="timelearn" class="form-control">
+                    <option value="1">Slot 1</option>
+                    <option value="2">Slot 2</option>
+                    <option value="3">Slot 3</option>
+                    <option value="4">Slot 4</option>
+                </select>
                 <span asp-validation-for="timelearn" class="text-danger"></span>
             </div>
             <div class="form-group">
