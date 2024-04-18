@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ScheduleBTEC.Models.ClassEntity>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Class Manager</h1>
+
+<p>
+    <a asp-action="AddClass">Create Class</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.className)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.className)
+            </td>
+            <td>
+                    <a asp-action="EditClass" class="btn btn-sm btn-warning" asp-route-id="@item.ClassId">Edit</a> |
+                    <a href="#" data-id="@item.ClassId" class="btn btn-sm btn-danger btnDelete"> Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data("id");
+                var conf = confirm('You Delete Class ?');
+
+                if (conf === true) {
+                    $.ajax({
+                        url: '/class/DeleteAcc',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (rs) {
+                            if (rs.success) {
+                                $('#trow_' + id).remove();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Account deleted successfully.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(function () {
+                                    location.reload();
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

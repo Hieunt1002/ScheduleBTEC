@@ -19,7 +19,7 @@
 <h1>Calender</h1>
 
 <p>
-    <a asp-action="Create">Tạo mới</a>
+    <a asp-action="Create">Create</a>
 </p>
 
 <form asp-action="Index" method="get">
@@ -29,7 +29,7 @@
 </form>
 
 <table class="table">
-    <thead style="background-color: blue;color:white;">
+    <thead style="background-color: #F07025;color:white;">
         <tr>
             <th>Slot</th>
             @for (DateTime date = overallStartDate; date <= overallEndDate; date = date.AddDays(1))
@@ -45,7 +45,7 @@
         @for (int i = 1; i <= 4; i++)
         {
             <tr>
-                <td style="height : 100px">Tiết @i</td>
+                <td style="height : 100px ; justify-content:center ; vertical-align:top">Slot @i</td>
                 @for (int j = 1; j <= 7; j++)
                 {
                     <td style="height : 100px">
@@ -58,12 +58,12 @@
                                 <h2>@item.classname</h2>
                                 if (item.role == "1" && item.DateLearn.Date == DateTime.Now.Date)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Attendance</a>
                                     <h6>Today</h6>
                                 }
                                 else if (item.role == "1" && item.DateLearn.Date < DateTime.Now.Date)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Điểm danh</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ScheduleId">Attendance</a>
                                     <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
                                 }
                                 else if (item.DateLearn.Date < DateTime.Now.Date || item.DateLearn.Date > DateTime.Now.Date)

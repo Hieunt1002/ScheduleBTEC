@@ -1,73 +1,65 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScheduleBTEC.Context;
 using ScheduleBTEC.DTO;
-using Microsoft.IdentityModel.Tokens;
 using ScheduleBTEC.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace ScheduleBTEC.Controllers
 {
-    public class AdminController : Controller
+    public class ClassController : Controller
     {
         private readonly ConnectDB db = new ConnectDB();
 
-        public ActionResult IndexAccount()
+        public IActionResult Index()
         {
-            var user = db.Users.ToList();
-            return View(user);
+            var classstudent = db.ClassEntities;
+            return View(classstudent);
         }
-        public ActionResult CreatAccount()
+        public ActionResult AddClass()
         {
-         
             return View();
         }
         [HttpPost]
-        public IActionResult CreatAccount(CUser model)
+        public IActionResult AddClass(ClassStudent model)
         {
             if (model != null)
             {
-                var cuser = new Users
+                var classstudent = new ClassEntity
                 {
-                    Email = model.Email,
-                    Password = model.Password,
-                    Fullname = model.Fullname,
-                    Phone = model.Phone,
-                    Role = model.Role,
-                };
+                    className = model.className,
 
-                db.Users.Add(cuser);
+                };
+                db.ClassEntities.Add(classstudent);
                 db.SaveChanges();
             }
-          
             return RedirectToAction("Index");
-        }
-        public ActionResult EditAccount(int id)
-        {
-            var item = db.Users.Find(id);
 
-            return View(item);
+        }
+        public ActionResult EditClass(int id)
+        {
+            var classstudent = db.ClassEntities.Find(id);
+            return View(classstudent);
         }
         [HttpPost]
-        public IActionResult EditAccount(Users model)
+        public IActionResult EditClass(ClassEntity model)
         {
-            db.Users.Attach(model);
+            db.ClassEntities.Attach(model);
             db.Update(model);
 
-           
+
             db.SaveChanges();
 
 
-            
+
             return RedirectToAction("Index");
         }
         [HttpPost]
         public ActionResult DeleteAcc(int id)
         {
-            var item = db.Users.Find(id);
+            var item = db.ClassEntities.Find(id);
             if (item != null)
             {
                 /*var DeleteItem=db.Categories.Attach(item);*/
-                db.Users.Remove(item);
+                db.ClassEntities.Remove(item);
                 db.SaveChanges();
                 return Json(new { success = true });
             }

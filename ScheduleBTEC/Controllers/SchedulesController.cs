@@ -25,7 +25,7 @@ namespace ScheduleBTEC.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index(string week)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserId == 1);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == 2 );
             if (user == null)
             {
                 return NotFound("User not found.");
@@ -69,7 +69,7 @@ namespace ScheduleBTEC.Controllers
                                  join cl in _context.ClassEntities on l.ClassId equals cl.ClassId
                                  join t in _context.Teaches on l.TeachId equals t.TeachId
                                  join c in _context.Courses on t.CourseId equals c.CourseId
-                                 where t.UserId == 1 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
+                                 where t.UserId == 2 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
                                  select new ViewScheduleDTO
                                  {
                                      ScheduleId = s.ScheduleId,
@@ -94,7 +94,7 @@ namespace ScheduleBTEC.Controllers
                                  join st in _context.Studys on l.LearnId equals st.LearnId
                                  join t in _context.Teaches on l.TeachId equals t.TeachId
                                  join c in _context.Courses on t.CourseId equals c.CourseId
-                                 where st.UserId == 1 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
+                                 where st.UserId == 2 && s.DateLearn >= startOfWeek && s.DateLearn <= endOfWeek
                                  select new ViewScheduleDTO
                                  {
                                      ScheduleId = s.ScheduleId,
@@ -105,7 +105,7 @@ namespace ScheduleBTEC.Controllers
                                      startdate = startOfWeek,
                                      enddate = endOfWeek,
                                      status = (from a in _context.Attendances
-                                               where a.ScheduleId == s.ScheduleId && a.UserId == 1
+                                               where a.ScheduleId == s.ScheduleId && a.UserId == 2
                                                select a.status).FirstOrDefault(),
                                      role = user.Role
                                  }).ToList();
@@ -250,12 +250,13 @@ namespace ScheduleBTEC.Controllers
                         await _context.SaveChangesAsync();
                     }
 
-                }else
+                }
+                else
                 {
                     for (int i = 0; i < userid.Length; i++)
                     {
                         var a = _context.Attendances.FirstOrDefault(n => n.AttendanceId == attend[i]);
-                        if(a != null)
+                        if (a != null)
                         {
                             a.status = status[i];
                             _context.Entry(a).State = EntityState.Modified;
