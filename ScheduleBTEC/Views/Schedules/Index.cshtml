@@ -26,7 +26,7 @@
     {
         <a asp-action="Create">Create</a>
     }
-   
+
 </p>
 
 <form asp-action="Index" method="get">
@@ -65,9 +65,9 @@
                                 <h2>@item.classname</h2>
                                 if (item.role == "1" && item.DateLearn.Date == DateTime.Now.Date)
                                 {
-                                    if(role == "1")
+                                    if (role == "1")
                                     {
-                                       <a asp-action="Edit" asp-route-id="@item.ScheduleId">attendance</a>
+                                        <a asp-action="Edit" asp-route-id="@item.ScheduleId">attendance</a>
 
                                     }
                                     <h6>Today</h6>
@@ -79,11 +79,15 @@
                                         <a asp-action="Edit" asp-route-id="@item.ScheduleId">attendance</a>
 
                                     }
-                                    <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
+                                    <h6>@(item.status == null ? "Not Yes" : "Attendance")</h6>
                                 }
                                 else if (item.DateLearn.Date < DateTime.Now.Date || item.DateLearn.Date > DateTime.Now.Date)
                                 {
-                                    <h6>@(item.status ? "Not Yes" : "Attendance")</h6>
+                                    <h6>@(item.status == "False" ? "Absent" : item.status == "True" ? "Attendance" : "Not Yes")</h6>
+                                }
+                                else if (item.status != "False" || item.status != "True")
+                                {
+                                    <h6>Not Yes</h6>
                                 }
 
                             }

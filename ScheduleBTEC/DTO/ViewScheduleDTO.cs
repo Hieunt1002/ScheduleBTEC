@@ -9,7 +9,7 @@
         public string timelearn { get; set; }
         public DateTime  startdate { get; set; }
         public DateTime enddate { get; set; }
-        public bool status { get; set; }
+        public string status { get; set; }
         public string role { get; set; }
     }
 }

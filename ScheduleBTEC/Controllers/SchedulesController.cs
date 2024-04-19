@@ -80,7 +80,7 @@ namespace ScheduleBTEC.Controllers
                                      classname = cl.className,
                                      startdate = startOfWeek,
                                      enddate = endOfWeek,
-                                     status = !_context.Attendances.Any(a => a.ScheduleId == s.ScheduleId),
+                                     status = _context.Attendances.Any(a => a.ScheduleId == s.ScheduleId).ToString(),
                                      role = user.Role
                                  }).ToList();
 
@@ -107,7 +107,7 @@ namespace ScheduleBTEC.Controllers
                                      enddate = endOfWeek,
                                      status = (from a in _context.Attendances
                                                where a.ScheduleId == s.ScheduleId && a.UserId == id
-                                               select a.status).FirstOrDefault(),
+                                               select a.status).FirstOrDefault().ToString(),
                                      role = user.Role
                                  }).ToList();
                 return View(connectDB);
