@@ -9,10 +9,9 @@
 <h1>Class Manager</h1>
 
 <p>
-    @if (role =="4")
-    {
+    
         <a asp-action="AddClass">Create Class</a>
-    }
+    
 </p>
 <table class="table">
     <thead>
@@ -30,12 +29,11 @@
                 @Html.DisplayFor(modelItem => item.className)
             </td>
             <td>
-                    @if (role == "4")
-                    {
+                   
                         <a asp-action="EditClass" class="btn btn-sm btn-warning" asp-route-id="@item.ClassId">Edit</a>
                         <a href="#" data-id="@item.ClassId" class="btn btn-sm btn-danger btnDelete"> Delete</a>
 
-                    }
+                    
                    
             </td>
         </tr>

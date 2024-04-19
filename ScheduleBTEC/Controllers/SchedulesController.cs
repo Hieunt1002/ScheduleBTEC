@@ -159,7 +159,7 @@ namespace ScheduleBTEC.Controllers
         public async Task<IActionResult> Create([Bind("startDate,endDate,session,timelearn,LearnId")] ScheduleDTO schedule)
         {
             string roleIdString = HttpContext.Session.GetString("Role");
-            if (roleIdString == null || roleIdString != "4" || roleIdString != "3")
+            if (roleIdString == null || roleIdString != "4" && roleIdString != "3")
             {
                 return Redirect("/Home/Login");
             }

@@ -48,7 +48,7 @@ namespace ScheduleBTEC.Controllers
                 db.SaveChanges();
             }
           
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexAccount");
         }
         public ActionResult EditAccount(int id)
         {
@@ -72,7 +72,7 @@ namespace ScheduleBTEC.Controllers
 
 
             
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexAccount");
         }
         [HttpPost]
         public ActionResult DeleteAcc(int id)

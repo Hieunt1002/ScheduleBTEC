@@ -9,10 +9,9 @@
 <h1>Course Manager</h1>
 
 <p>
-    @if (role == "4")
-    {
+   
         <a asp-action="AddCourse">Create Course</a>
-    }
+    
     
 </p>
 <table class="table">
@@ -31,13 +30,12 @@
                 @Html.DisplayFor(modelItem => item.CourseName)
             </td>
             <td>
-                    @if (role == "4")
-                    {
+                  
                         <a asp-action="EditCourse" asp-route-id="@item.CourseId" class="btn btn-warning">Edit</a>
  
                          <a href = "#" data - id = "@item.CourseId" class="btn btn-sm btn-danger btnDelete"> Delete</a>
 
-                    }
+                    
                  
                 </td>
         </tr>

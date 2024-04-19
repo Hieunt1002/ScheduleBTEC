@@ -53,7 +53,26 @@
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Role)
+               
+                        @{
+                            if (item.Role == "1")
+                            {
+                                @Html.Raw("Teacher")
+                            }
+                            else if (item.Role == "2")
+                            {
+                                @Html.Raw("Student")
+                            }
+                            else if (item.Role == "3")
+                            {
+                                @Html.Raw("Staff")
+                            }
+                            else if (item.Role == "4")
+                            {
+                                @Html.Raw("Admin")
+                            }
+
+                        }
             </td>
             <td>
                     <a asp-action="EditAccount" class="btn btn-sm btn-warning" asp-route-id="@item.UserId">Edit</a>
